@@ -12,7 +12,8 @@ describe('Block', () => {
     const block = new Block(-1, genesisBlock.hash, 'data');
     const invalidBlock = block.isValid(genesisBlock.index, genesisBlock.hash);
 
-    expect(invalidBlock).toBe(false);
+    expect(invalidBlock.success).toBe(false);
+    expect(invalidBlock.message).toBe('Invalid index');
   });
 
   test('should create an invalid block (hash)', () => {
@@ -20,7 +21,8 @@ describe('Block', () => {
     block.hash = '';
     const invalidBlock = block.isValid(genesisBlock.index, genesisBlock.hash);
 
-    expect(invalidBlock).toBe(false);
+    expect(invalidBlock.success).toBe(false);
+    expect(invalidBlock.message).toBe('Invalid hash');
   });
 
   test('should create an invalid block (timestamp)', () => {
@@ -28,34 +30,38 @@ describe('Block', () => {
     block.timestamp = 0;
     const invalidBlock = block.isValid(genesisBlock.index, genesisBlock.hash);
 
-    expect(invalidBlock).toBe(false);
+    expect(invalidBlock.success).toBe(false);
+    expect(invalidBlock.message).toBe('Invalid timestamp');
   });
 
   test('should create an invalid block (previousIndex)', () => {
     const block = new Block(2, genesisBlock.hash, 'data');
     const invalidBlock = block.isValid(genesisBlock.index, genesisBlock.hash);
 
-    expect(invalidBlock).toBe(false);
+    expect(invalidBlock.success).toBe(false);
+    expect(invalidBlock.message).toBe('Invalid index');
   });
 
   test('should create an invalid block (previousHash)', () => {
     const block = new Block(1, '', 'data');
     const invalidBlock = block.isValid(genesisBlock.index, genesisBlock.hash);
 
-    expect(invalidBlock).toBe(false);
+    expect(invalidBlock.success).toBe(false);
+    expect(invalidBlock.message).toBe('Invalid previous hash');
   });
 
   test('should create an invalid block (data)', () => {
     const block = new Block(1, genesisBlock.hash, '');
     const invalidBlock = block.isValid(genesisBlock.index, genesisBlock.hash);
 
-    expect(invalidBlock).toBe(false);
+    expect(invalidBlock.success).toBe(false);
+    expect(invalidBlock.message).toBe('Invalid data');
   });
 
   test('should create a valid block', () => {
     const block = new Block(1, genesisBlock.hash, 'data');
     const validBlock = block.isValid(genesisBlock.index, genesisBlock.hash);
 
-    expect(validBlock).toBe(true);
+    expect(validBlock.success).toBe(true);
   });
 });

@@ -1,4 +1,5 @@
 import { createHash } from 'node:crypto';
+import { Validation } from './validation';
 
 /**
  * Block class
@@ -33,16 +34,15 @@ export class Block {
 
   /**
    * Checks if the block is valid
-   * @returns True if the block is valid, false otherwise
+   * @returns Returns if the block is valid
    */
-  isValid(previousIndex: number, previousHash: string): boolean {
-    if (this.index < 0) return false;
-    if (this.index !== previousIndex + 1) return false;
-    if (this.timestamp < 1) return false;
-    if (!this.hash) return false;
-    if (!this.previousHash) return false;
-    if (this.previousHash !== previousHash) return false;
-    if (!this.data) return false;
-    return true;
+  isValid(previousIndex: number, previousHash: string): Validation {
+    if (this.index !== previousIndex + 1) return new Validation(false, 'Invalid index');
+    if (this.timestamp < 1) return new Validation(false, 'Invalid timestamp');
+    if (this.hash !== this.getHash()) return new Validation(false, 'Invalid hash');
+    if (!this.previousHash) return new Validation(false, 'Invalid previous hash');
+    if (this.previousHash !== previousHash) return new Validation(false, 'Invalid previous hash');
+    if (!this.data) return new Validation(false, 'Invalid data');
+    return new Validation();
   }
 }

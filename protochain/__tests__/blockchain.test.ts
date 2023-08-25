@@ -14,7 +14,7 @@ describe('Blockchain', () => {
   });
 
   test('should have a valid genesis block', () => {
-    expect(blockchain.isValid()).toBe(true);
+    expect(blockchain.isValid().success).toBe(true);
   });
 
   test('should not add an invalid block', () => {
@@ -37,11 +37,15 @@ describe('Blockchain', () => {
   });
 
   test('should be a valid blockchain', () => {
-    expect(blockchain.isValid()).toBe(true);
+    expect(blockchain.isValid().success).toBe(true);
   });
 
   test('should not be a valid blockchain', () => {
-    blockchain.blocks[1].hash = 'invalid hash';
-    expect(blockchain.isValid()).toBe(false);
+    const index = 1;
+    blockchain.blocks[index].hash = 'invalid previous hash';
+    const result = blockchain.isValid();
+    expect(result.success).toBe(false);
+    expect(result.message)
+      .toBe(`Invalid block #${index + 1}: Invalid previous hash`);
   });
 });
