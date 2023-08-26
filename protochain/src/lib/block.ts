@@ -1,6 +1,12 @@
 import { createHash } from 'node:crypto';
 import { Validation } from './validation';
 
+interface ICreateBlock {
+  index: number;
+  previousHash: string;
+  data: string;
+}
+
 /**
  * Block class
  * - Represents a block in the blockchain.
@@ -18,11 +24,11 @@ export class Block {
    * @param previousHash The hash of the previous block
    * @param data The data of the block
    */
-  constructor(index: number, previousHash: string, data: string) {
-    this.index = index;
+  constructor(block: ICreateBlock) {
+    this.index = block.index;
     this.timestamp = Date.now();
-    this.previousHash = previousHash;
-    this.data = data;
+    this.previousHash = block.previousHash;
+    this.data = block.data;
     this.hash = this.getHash();
   }
 

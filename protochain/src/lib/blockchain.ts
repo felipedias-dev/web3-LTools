@@ -15,17 +15,28 @@ export class Blockchain {
    * @returns A new blockchain
    */
   constructor() {
-    this.blocks = [new Block(this.nextIndex, '', 'genesis')];
+    this.blocks = [
+      new Block({
+        index: this.nextIndex,
+        previousHash: '',
+        data: 'genesis'
+      })
+    ];
+
     this.nextIndex++;
   }
 
-  addBlock(block: Block): boolean {
-    const previousBlock = this.blocks[this.blocks.length - 1];
+  getLastBlock(): Block {
+    return this.blocks[this.blocks.length - 1];
+  }
+
+  addBlock(block: Block): Validation {
+    const previousBlock = this.getLastBlock();
     const isValid = block.isValid(previousBlock.index, previousBlock.hash);
-    if (!isValid.success) return false;
+    if (!isValid.success) return new Validation(false, isValid.message);
     this.blocks.push(block);
     this.nextIndex++;
-    return true;
+    return new Validation();
   }
 
   isValid(): Validation {
