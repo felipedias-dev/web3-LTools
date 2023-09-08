@@ -24,6 +24,7 @@ describe('Blockchain', () => {
       index: -1,
       previousHash: blockchain.getLastBlock().hash,
       data: 'data',
+      miner: 'miner',
     });
 
     const result = blockchain.addBlock(block);
@@ -35,6 +36,7 @@ describe('Blockchain', () => {
       index: blockchain.nextIndex,
       previousHash: blockchain.getLastBlock().hash,
       data: 'data',
+      miner: 'miner',
     });
 
     const result1 = blockchain.addBlock(block1);
@@ -44,6 +46,7 @@ describe('Blockchain', () => {
       index: blockchain.nextIndex,
       previousHash: blockchain.getLastBlock().hash,
       data: 'data',
+      miner: 'miner',
     });
 
     const result2 = blockchain.addBlock(block2);

@@ -3,12 +3,14 @@ import { Block } from '../src/lib/block';
 
 describe('Block', () => {
   let genesisBlock: Block;
+  const difficulty = 1;
+  const miner = 'felipe';
 
   beforeAll(() => {
     genesisBlock = new Block({
       index: 0,
       previousHash: '',
-      data: 'genesis'
+      data: 'genesis',
     });
   });
 
@@ -18,7 +20,7 @@ describe('Block', () => {
       previousHash: genesisBlock.hash,
       data: 'data',
     });
-    const invalidBlock = block.isValid(genesisBlock.index, genesisBlock.hash);
+    const invalidBlock = block.isValid(genesisBlock.index, genesisBlock.hash, difficulty);
 
     expect(invalidBlock.success).toBe(false);
     expect(invalidBlock.message).toBe('Invalid index');
@@ -32,7 +34,7 @@ describe('Block', () => {
     });
 
     block.hash = '';
-    const invalidBlock = block.isValid(genesisBlock.index, genesisBlock.hash);
+    const invalidBlock = block.isValid(genesisBlock.index, genesisBlock.hash, difficulty);
 
     expect(invalidBlock.success).toBe(false);
     expect(invalidBlock.message).toBe('Invalid hash');
@@ -46,7 +48,7 @@ describe('Block', () => {
     });
 
     block.timestamp = 0;
-    const invalidBlock = block.isValid(genesisBlock.index, genesisBlock.hash);
+    const invalidBlock = block.isValid(genesisBlock.index, genesisBlock.hash, difficulty);
 
     expect(invalidBlock.success).toBe(false);
     expect(invalidBlock.message).toBe('Invalid timestamp');
@@ -59,7 +61,7 @@ describe('Block', () => {
       data: 'data',
     });
 
-    const invalidBlock = block.isValid(genesisBlock.index, genesisBlock.hash);
+    const invalidBlock = block.isValid(genesisBlock.index, genesisBlock.hash, difficulty);
 
     expect(invalidBlock.success).toBe(false);
     expect(invalidBlock.message).toBe('Invalid index');
@@ -72,7 +74,7 @@ describe('Block', () => {
       data: 'data',
     });
 
-    const invalidBlock1 = block1.isValid(genesisBlock.index, genesisBlock.hash);
+    const invalidBlock1 = block1.isValid(genesisBlock.index, genesisBlock.hash, difficulty);
 
     expect(invalidBlock1.success).toBe(false);
     expect(invalidBlock1.message).toBe('Invalid previous hash');
@@ -83,7 +85,7 @@ describe('Block', () => {
       data: 'data',
     });
 
-    const invalidBlock2 = block2.isValid(genesisBlock.index, genesisBlock.hash);
+    const invalidBlock2 = block2.isValid(genesisBlock.index, genesisBlock.hash, difficulty);
 
     expect(invalidBlock2.success).toBe(false);
     expect(invalidBlock2.message).toBe('Invalid previous hash');
@@ -96,10 +98,38 @@ describe('Block', () => {
       data: '',
     });
 
-    const invalidBlock = block.isValid(genesisBlock.index, genesisBlock.hash);
+    const invalidBlock = block.isValid(genesisBlock.index, genesisBlock.hash, difficulty);
 
     expect(invalidBlock.success).toBe(false);
     expect(invalidBlock.message).toBe('Invalid data');
+  });
+
+  test('should not create an invalid block (nonce)', () => {
+    const block = new Block({
+      index: 1,
+      previousHash: genesisBlock.hash,
+      data: 'data',
+      nonce: 0,
+    });
+
+    const invalidBlock = block.isValid(genesisBlock.index, genesisBlock.hash, difficulty);
+
+    expect(invalidBlock.success).toBe(false);
+    expect(invalidBlock.message).toBe('Invalid mining');
+  });
+
+  test('should not create an invalid block (prefix)', () => {
+    const block = new Block({
+      index: 1,
+      previousHash: genesisBlock.hash,
+      data: 'data',
+      miner,
+    });
+
+    const invalidBlock = block.isValid(genesisBlock.index, genesisBlock.hash, difficulty);
+
+    expect(invalidBlock.success).toBe(false);
+    expect(invalidBlock.message).toBe('Invalid prefix');
   });
 
   test('should create a valid block', () => {
@@ -109,7 +139,11 @@ describe('Block', () => {
       data: 'data',
     });
 
-    const validBlock = block.isValid(genesisBlock.index, genesisBlock.hash);
+    block.mine(difficulty, miner);
+
+    const validBlock = block.isValid(genesisBlock.index, genesisBlock.hash, difficulty);
+
+    console.log(validBlock);
 
     expect(validBlock.success).toBe(true);
   });
