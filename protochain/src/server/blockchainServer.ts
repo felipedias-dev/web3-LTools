@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import morgan from 'morgan';
 import { Blockchain } from '../lib/blockchain';
 import { Block } from '../lib/block';
@@ -13,7 +13,7 @@ app.use(express.json());
 
 const blockchain = new Blockchain();
 
-app.get('/status', (req, res, next) => {
+app.get('/status', (req: Request, res: Response, next: NextFunction) => {
   res.json({
     numberOfBlocks: blockchain.blocks.length,
     isValid: blockchain.isValid(),
@@ -21,7 +21,11 @@ app.get('/status', (req, res, next) => {
   });
 });
 
-app.post('/addblock', (req, res, next) => {
+app.get('/blocks/next', (req: Request, res: Response, next: NextFunction) => {
+  res.json(blockchain.getNextBlock());
+});
+
+app.post('/addblock', (req: Request, res: Response, next: NextFunction) => {
   const data = req.body.data;
 
   const blockData = {

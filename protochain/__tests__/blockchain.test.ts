@@ -1,4 +1,4 @@
-import { describe, expect, test, jest } from '@jest/globals';
+import { describe, expect, test, jest, beforeAll } from '@jest/globals';
 import { Blockchain } from '../src/lib/blockchain';
 import { Block } from '../src/lib/block';
 
@@ -51,6 +51,11 @@ describe('Blockchain', () => {
 
     const result2 = blockchain.addBlock(block2);
     expect(result2.success).toBe(true);
+  });
+
+  test('should get next block info', () => {
+    const info = blockchain.getNextBlock();
+    expect(info.feePerTx).toEqual(1);
   });
 
   test('should be a valid blockchain', () => {

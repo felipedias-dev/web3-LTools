@@ -13,6 +13,13 @@ describe('BlockchainServer Tests', () => {
     expect(response.body.isValid.success).toBe(true);
   });
 
+  test('GET /blocks/next - Should return next block', async () => {
+    const response = await request(app).get('/blocks/next');
+
+    expect(response.status).toBe(200);
+    expect(response.body.index).toEqual(1);
+  });
+
   test('POST /addblock - Should add a block', async () => {
     const response = await request(app)
       .post('/addblock')
