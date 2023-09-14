@@ -1,5 +1,6 @@
 import { createHash } from 'node:crypto';
 import { Validation } from './validation';
+import IBlockInfo from './blockInfo';
 
 interface ICreateBlock {
   index: number;
@@ -82,5 +83,13 @@ export class Block {
     if (!this.hash.startsWith(prefix)) return new Validation(false, 'Invalid prefix');
 
     return new Validation();
+  }
+
+  static fromBlockInfo(blockInfo: IBlockInfo): Block {
+    return new Block({
+      index: blockInfo.index,
+      previousHash: blockInfo.previousHash,
+      data: blockInfo.data,
+    });
   }
 }
