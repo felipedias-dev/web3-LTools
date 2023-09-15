@@ -26,20 +26,9 @@ app.get('/blocks/next', (req: Request, res: Response, next: NextFunction) => {
 });
 
 app.post('/addblock', (req: Request, res: Response, next: NextFunction) => {
-  const data = req.body.data;
+  const blockData = req.body as Block;
 
-  const blockData = {
-    index: blockchain.nextIndex,
-    previousHash: blockchain.blocks[blockchain.blocks.length - 1].hash,
-    data,
-  }
-
-  const block = new Block({
-    index: blockData.index,
-    previousHash: blockData.previousHash,
-    data: blockData.data
-  });
-
+  const block = new Block(blockData);
   blockchain.addBlock(block);
   res.status(201).json({ block });
 });

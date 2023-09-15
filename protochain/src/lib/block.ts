@@ -6,8 +6,10 @@ interface ICreateBlock {
   index: number;
   previousHash: string;
   data: string;
+  hash?: string;
   nonce?: number;
   miner?: string;
+  timestamp?: number;
 }
 
 /**
@@ -31,12 +33,12 @@ export class Block {
    */
   constructor(block: ICreateBlock) {
     this.index = block.index;
-    this.timestamp = Date.now();
+    this.timestamp = block.timestamp || Date.now();
     this.previousHash = block.previousHash;
     this.data = block.data;
     this.nonce = block.nonce || 1;
     this.miner = block.miner || '';
-    this.hash = this.getHash();
+    this.hash = block.hash || this.getHash();
   }
 
   getHash(): string {
