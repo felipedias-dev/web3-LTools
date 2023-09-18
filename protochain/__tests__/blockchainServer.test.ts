@@ -23,7 +23,15 @@ describe('BlockchainServer Tests', () => {
   test('POST /addblock - Should add a block', async () => {
     const response = await request(app)
       .post('/addblock')
-      .send({ data: 'test' });
+      .send({
+        index: 1,
+        previousHash: '123',
+        timestamp: new Date(),
+        nonce: 123,
+        hash: '123',
+        difficulty: 1,
+        data: 'test'
+      });
 
     expect(response.status).toBe(201);
     expect(response.body.block.index).toBe(1);
